@@ -21,13 +21,20 @@ app.set("secPort", port + 443);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync(__dirname + "/server.key"),
+  cert: fs.readFileSync(__dirname + "/server.cert"),
+};
+
+const secureServer = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+secureServer.listen(app.get("secPort"), () => {
+  console.log("Server listening on port", app.get("secPort"));
+});
 server.on("error", onError);
 server.on("listening", onListening);
 
